@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from covid.models import *
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, TextInput, CheckboxSelectMultiple
 # Create your views here.
 
 def test(request):
@@ -19,10 +19,12 @@ def CaseFormView(request):
             new_case = form.save()
             new_events = formset.save()
             for event in new_events:
-                Attendance.objects.create(case=new_case, event=event)
+                # Attendance.objects.create(case=new_case, event=event)
+                new_case.events.add(event)
             return redirect('test')
     else:
         form = CaseForm()
+        formset = eventFormSet(queryset=Event.objects.none())
     
     return render(request, 'case_form.html', {'form': form, 'formset': formset})
 
@@ -35,5 +37,5 @@ def EventFormView(request):
             return redirect('test')
     else:
         form = EventForm()
-    
+
     return render(request, 'event_form.html', {'form': form})
