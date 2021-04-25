@@ -4,7 +4,7 @@ from covid.models import *
 from django.forms import modelformset_factory
 # Create your views here.
 
-def test():
+def test(request):
     return HttpResponse("Hello world")
 
 
@@ -23,6 +23,17 @@ def CaseFormView(request):
             return redirect('test')
     else:
         form = CaseForm()
-        formset = eventFormSet(queryset=Event.objects.none())
     
     return render(request, 'case_form.html', {'form': form, 'formset': formset})
+
+def EventFormView(request):
+
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            new_event = form.save()
+            return redirect('test')
+    else:
+        form = EventForm()
+    
+    return render(request, 'event_form.html', {'form': form})
