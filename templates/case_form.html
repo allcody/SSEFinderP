@@ -1,0 +1,54 @@
+<style>
+    table {
+        width: 50%
+    }
+    tr {
+        text-align: left;
+    }
+</style>
+
+<title>Test Form</title>
+<h1>Test Form</h1>
+<form action="{% url 'case-form' %}" id='all-forms' method="post">
+    {% csrf_token %}
+    <table>{{ form.as_table }}</table>
+    
+    <h2>Add New Events</h2>
+    {{ formset.management_form }}
+    {% for iform in formset %}
+        <div class="event-form">
+            <table>{{ iform.as_table }}</table>
+            <br>
+        </div>
+    {% endfor %}
+
+    <button id="add-form" type="button">Add One More Event</button><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+<form action="javascript:history.back()">
+    <input type="submit" value="Cancel" />
+</form>
+
+<script>
+    let eventForm = document.querySelectorAll(".event-form")
+    let container = document.querySelector("#all-forms")
+    let addButton = document.querySelector("#add-form")
+    let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+    
+    let formNum = eventForm.length-1
+    addButton.addEventListener('click', addForm)
+
+    function addForm(e){
+        e.preventDefault()
+        let newForm = eventForm[0].cloneNode(true)
+        let formRegex = RegExp(`form-(\\d){1}-`,'g')
+
+        formNum++
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
+        container.insertBefore(newForm, addButton)
+        
+        totalForms.setAttribute('value', `${formNum+1}`)
+    }
+</script>

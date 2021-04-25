@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.forms import ModelForm, modelformset_factory, ModelMultipleChoiceField, SelectMultiple, CheckboxSelectMultiple
 # Create your models here.
 
 class Event(models.Model):
@@ -31,3 +31,25 @@ class Attendance(models.Model):
 
     def __str__(self):
         return str(self.case) + " " +str(self.event)
+
+class CaseForm(ModelForm):
+    event_select = ModelMultipleChoiceField(Event.objects, widget=CheckboxSelectMultiple, required=False)
+
+    class Meta:
+        model = Case
+        fields = ['case_number', 'person_name', 'id_number', 'birth', 'onset_date', 'confirm_date']
+
+    def save(self):
+        new_case_data = self.cleaned_data.copy()
+        del new_case_data['event_select']
+        new_case = Case.objects.create(**new_case_data)
+
+        for event in self.cleaned_data['event_select']:
+            Attendance.objects.create(case=new_case, event=event)
+
+        return new_case
+
+class EventForm(ModelForm):
+    class Meta:
+        model = Event
+        fields = ['venue_name', 'venue_location', 'address', 'x_coordinate', 'y_coordinate', 'date', 'description']
