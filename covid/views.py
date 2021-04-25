@@ -19,7 +19,6 @@ def CaseFormView(request):
             new_case = form.save()
             new_events = formset.save()
             for event in new_events:
-                # Attendance.objects.create(case=new_case, event=event)
                 new_case.events.add(event)
             return redirect('test')
     else:
@@ -39,3 +38,28 @@ def EventFormView(request):
         form = EventForm()
 
     return render(request, 'event_form.html', {'form': form})
+
+def AddAttendanceView(request, add_type, id_num):
+
+    if add_type == 'case':
+        data_obj = Case.objects.get(pk = id_num)
+    elif add_type == 'event':
+        data_obj = Event.objects.get(pk = id_num)
+
+    if request.method == 'POST':
+        if add_type == 'case':
+            form = EventToCaseForm(request.POST, instance=data_obj)
+        elif add_type == 'event':
+            form = CaseToEventForm(request.POST, instance=data_obj)
+        
+        if form.is_valid():
+            new_attendance = form.save()
+            return redirect('test')
+
+    else:
+        if add_type == 'case':
+            form = EventToCaseForm(instance=data_obj)
+        elif add_type == 'event':
+            form = CaseToEventForm(instance=data_obj) 
+
+    return render(request, 'add_attendance_form.html', {'form': form, 'add_type': add_type, 'attendance': data_obj})

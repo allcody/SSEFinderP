@@ -5,4 +5,4 @@ from .models import *
 
 admin.site.register(Case)
 admin.site.register(Event)
-# admin.site.register(Attendance)
+admin.site.register(Attendance)
