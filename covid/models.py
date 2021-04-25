@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-class Evnet(models.Model):
+class Event(models.Model):
     venue_name = models.CharField(max_length=200)
     venue_location = models.CharField(max_length=200)
     address = models.CharField(max_length=200)
