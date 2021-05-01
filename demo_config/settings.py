@@ -27,7 +27,7 @@ SECRET_KEY = ')(oit092hs!^7!rdi0rn*sfo38%y8ndna)2)9ql!uj+nsn7bg_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://comp3297-ssefinder.herokuapp.com','127.0.0.1:8000']
 
 
 # Application definition
