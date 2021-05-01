@@ -1,0 +1,21 @@
+<style>
+    table {
+        width: 50%
+    }
+    tr {
+        text-align: left;
+    }
+</style>
+
+<title>Add Attdedance Record</title>
+<h1>Add Attdedance Record</h1>
+<form action="{% url 'add-attendance' add_type attendance.pk %}" method="post">
+    {% csrf_token %}
+    <table>{{ form.as_table }}</table>
+
+    <input type="submit" value="Submit">
+</form>
+
+<form action="javascript:history.back()">
+    <input type="submit" value="Cancel" />
+</form>
