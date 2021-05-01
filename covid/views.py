@@ -2,11 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from covid.models import *
 from django.forms import modelformset_factory, TextInput, CheckboxSelectMultiple
-<<<<<<< HEAD
 from datetime import datetime, timedelta
-=======
 from django.contrib import messages
->>>>>>> refs/remotes/origin/main
 # Create your views here.
 
 def test(request):
