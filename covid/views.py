@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from covid.models import *
 from django.forms import modelformset_factory, TextInput, CheckboxSelectMultiple
+from datetime import datetime, timedelta
 # Create your views here.
 
 def test(request):
@@ -59,7 +60,15 @@ def AddAttendanceView(request, add_type, id_num):
     else:
         if add_type == 'case':
             form = EventToCaseForm(instance=data_obj)
+            start_date = data_obj.onset_date - timedelta(days=4)
+            end_date = data_obj.onset_date + timedelta(days=15)
+            valid_events = Event.objects.filter(date__gt=start_date).filter(date__lt=end_date)
+            form.fields['events'] = ModelMultipleChoiceField(queryset=valid_events,widget=CheckboxSelectMultiple)
         elif add_type == 'event':
             form = CaseToEventForm(instance=data_obj) 
+            start_date = data_obj.date + timedelta(days=4)
+            end_date = data_obj.date - timedelta(days=15)
+            valid_cases = Case.objects.filter(onset_date__gt=end_date).filter(onset_date__lt=start_date)
+            form.fields['cases'] = ModelMultipleChoiceField(queryset=valid_cases,widget=CheckboxSelectMultiple)
 
     return render(request, 'add_attendance_form.html', {'form': form, 'add_type': add_type, 'attendance': data_obj})
