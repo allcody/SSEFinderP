@@ -2,12 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from covid.models import *
 from django.forms import modelformset_factory, TextInput, CheckboxSelectMultiple
+from django.contrib import messages
 # Create your views here.
 
 def test(request):
     return HttpResponse("Hello world")
-
-
 
 def CaseFormView(request):
     eventFormSet = modelformset_factory(Event, form = EventForm, extra=1)
@@ -16,15 +15,19 @@ def CaseFormView(request):
         form = CaseForm(request.POST)
         formset = eventFormSet(request.POST, request.FILES)
         if form.is_valid() and formset.is_valid():
+            messages.success(request, 'You have add the new case successfully!') 
             new_case = form.save()
             new_events = formset.save()
+            form = CaseForm()
             for event in new_events:
                 new_case.events.add(event)
-            return redirect('test')
+            # return redirect('test')
+        else:
+            messages.error(request, 'There are some data miss, please check.')
     else:
         form = CaseForm()
         formset = eventFormSet(queryset=Event.objects.none())
-    
+
     return render(request, 'case_form.html', {'form': form, 'formset': formset})
 
 def EventFormView(request):
@@ -33,9 +36,14 @@ def EventFormView(request):
         form = EventForm(request.POST)
         if form.is_valid():
             new_event = form.save()
-            return redirect('test')
+            messages.success(request, 'You have add the new event successfully!') 
+            form = EventForm()
+            # return redirect('test')
+        else:
+            messages.error(request, 'There are some data miss, please check.')
     else:
         form = EventForm()
+
 
     return render(request, 'event_form.html', {'form': form})
 
