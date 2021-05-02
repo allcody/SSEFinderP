@@ -15,7 +15,35 @@ def CaseFormView(request):
     if request.method == 'POST':
         form = CaseForm(request.POST)
         formset = eventFormSet(request.POST, request.FILES)
+        
         if form.is_valid() and formset.is_valid():
+            if form.cleaned_data['birth'] > form.cleaned_data['onset_date'] or form.cleaned_data['confirm_date'] < form.cleaned_data['onset_date']:
+                print('error')
+                raise Exception('birth date or onset date errot')
+
+            print("------------------")
+            for attended_event in form.cleaned_data['events']:
+                # start_date = attended_event.date - timedelta(days=3)
+                end_date = attended_event.date + timedelta(days=14)
+                # print(start_date, end_date)
+            
+                if form.cleaned_data['onset_date'] > end_date or attended_event.date > form.cleaned_data['confirm_date']:
+                    print('error')
+                    raise Exception('event date out of range')
+            print("------------------")
+
+            for new_event_form in formset:
+                if len(new_event_form.cleaned_data) == 0:
+                    break
+                event_date = new_event_form.cleaned_data['date']
+                # start_date = event_date - timedelta(days=3)
+                end_date = event_date + timedelta(days=14)
+                print(start_date, end_date)
+
+                if form.cleaned_data['onset_date'] > end_date or event_date > form.cleaned_data['confirm_date']:
+                    print('error')
+                    raise Exception('new event date out of range')
+
             messages.success(request, 'You have add the new case successfully!') 
             new_case = form.save()
             new_events = formset.save()
@@ -35,6 +63,13 @@ def EventFormView(request):
 
     if request.method == 'POST':
         form = EventForm(request.POST)
+        cases = form['cases']
+        for case in cases:
+            start_date = form['date'] + timedelta(days=4)
+            end_date = form['date'] - timedelta(days=15)
+            if case.onset_date > start_date or case.onset_date < end_date:
+                print('error')
+                raise Exception('case date out of range')
         if form.is_valid():
             new_event = form.save()
             messages.success(request, 'You have add the new event successfully!') 
@@ -68,15 +103,19 @@ def AddAttendanceView(request, add_type, id_num):
     else:
         if add_type == 'case':
             form = EventToCaseForm(instance=data_obj)
-            start_date = data_obj.onset_date - timedelta(days=4)
-            end_date = data_obj.onset_date + timedelta(days=15)
-            valid_events = Event.objects.filter(date__gt=start_date).filter(date__lt=end_date)
+            
+            confirm_date = data_obj.confirm_date
+            infect_date = data_obj.onset_date - timedelta(days=14)
+            valid_events = Event.objects.filter(date__lte=confirm_date)
+            valid_events = valid_events.filter(date__gte=infect_date)
             form.fields['events'] = ModelMultipleChoiceField(queryset=valid_events,widget=CheckboxSelectMultiple)
         elif add_type == 'event':
             form = CaseToEventForm(instance=data_obj) 
-            start_date = data_obj.date + timedelta(days=4)
-            end_date = data_obj.date - timedelta(days=15)
-            valid_cases = Case.objects.filter(onset_date__gt=end_date).filter(onset_date__lt=start_date)
+            
+            event_date = data_obj.date
+            end_date = event_date + timedelta(days=14)
+            valid_cases = Case.objects.filter(confirm_date__gt=event_date)
+            valid_cases = valid_cases.filter(onset_date__lte=end_date)
             form.fields['cases'] = ModelMultipleChoiceField(queryset=valid_cases,widget=CheckboxSelectMultiple)
 
     return render(request, 'add_attendance_form.html', {'form': form, 'add_type': add_type, 'attendance': data_obj})
