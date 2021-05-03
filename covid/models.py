@@ -65,6 +65,10 @@ class EventForm(ModelForm):
             'date' : FormDateInput()
         }
 
+class newEventForm(EventForm):
+    def __init__(self, *args, **kwargs):
+        super(newEventForm, self).__init__(*args, **kwargs)
+        self.fields.pop('cases')
 
 class EventToCaseForm(ModelForm):
     class Meta:
