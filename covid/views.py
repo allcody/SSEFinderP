@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from covid.models import *
+from datetime import datetime, date, timedelta
 from django.forms import modelformset_factory, TextInput, CheckboxSelectMultiple
-from datetime import datetime, timedelta
 from django.contrib import messages
 # Create your views here.
 
@@ -10,46 +10,50 @@ def test(request):
     return HttpResponse("Hello world")
 
 def CaseFormView(request):
-    eventFormSet = modelformset_factory(Event, form = EventForm, extra=1)
+    eventFormSet = modelformset_factory(Event, form = newEventForm, extra=1)
 
     if request.method == 'POST':
         form = CaseForm(request.POST)
         formset = eventFormSet(request.POST, request.FILES)
-        
+
+        '''
+            Check the valid form first, then check the input date.
+        '''
         if form.is_valid() and formset.is_valid():
-            if form.cleaned_data['birth'] > form.cleaned_data['onset_date'] or form.cleaned_data['confirm_date'] < form.cleaned_data['onset_date']:
-                print('error')
-                raise Exception('birth date or onset date errot')
+            birth_date = form.cleaned_data['birth']
+            onset_date = form.cleaned_data['onset_date']
+            confirm_date = form.cleaned_data['confirm_date']
+            deltaBO = onset_date - birth_date
+            deltaCO = confirm_date - onset_date
 
-            print("------------------")
-            for attended_event in form.cleaned_data['events']:
-                # start_date = attended_event.date - timedelta(days=3)
-                end_date = attended_event.date + timedelta(days=14)
-                # print(start_date, end_date)
-            
-                if form.cleaned_data['onset_date'] > end_date or attended_event.date > form.cleaned_data['confirm_date']:
-                    print('error')
-                    raise Exception('event date out of range')
-            print("------------------")
+            if (deltaBO > timedelta(days=0) and deltaCO > timedelta(days=0))  :
+                for attended_event in form.cleaned_data['events']:
+                    end_date = attended_event.date + timedelta(days=14)
+                    
+                    if onset_date > end_date or attended_event.date >confirm_date:
+                        messages.error(request, "case date out of range")
+                        return render(request, 'case_form.html', {'form': form, 'formset': formset})
 
-            for new_event_form in formset:
-                if len(new_event_form.cleaned_data) == 0:
-                    break
-                event_date = new_event_form.cleaned_data['date']
-                # start_date = event_date - timedelta(days=3)
-                end_date = event_date + timedelta(days=14)
 
-                if form.cleaned_data['onset_date'] > end_date or event_date > form.cleaned_data['confirm_date']:
-                    print('error')
-                    raise Exception('new event date out of range')
+                for new_event_form in formset:
+                    if len(new_event_form.cleaned_data) == 0:
+                        break
+                    event_date = new_event_form.cleaned_data['date']
+                    # start_date = event_date - timedelta(days=3)
+                    end_date = event_date + timedelta(days=14)
 
-            messages.success(request, 'You have add the new case successfully!') 
-            new_case = form.save()
-            new_events = formset.save()
-            form = CaseForm()
-            for event in new_events:
-                new_case.events.add(event)
-            # return redirect('test')
+                    if onset_date > end_date or event_date > confirm_date:
+                        messages.error(request, "case date out of range")
+                        return render(request, 'case_form.html', {'form': form, 'formset': formset})
+
+                messages.success(request, 'You have add the new case successfully!')         
+                new_case = form.save()
+                new_events = formset.save()
+                form = CaseForm()
+                for event in new_events:
+                    new_case.events.add(event)
+            else:
+                messages.error(request, 'Wrong date input.' + str(form.cleaned_data['birth']) )
         else:
             messages.error(request, 'There are some data miss, please check.')
     else:
@@ -59,21 +63,27 @@ def CaseFormView(request):
     return render(request, 'case_form.html', {'form': form, 'formset': formset})
 
 def EventFormView(request):
+    startDate = datetime(2020,1,23)
+    endDate = datetime.now()
 
     if request.method == 'POST':
         form = EventForm(request.POST)
 
         if form.is_valid():
-            cases = form.cleaned_data['cases'] 
-            event_date = form.cleaned_data['date']
-            end_date = event_date + timedelta(days=14)
-            for case in cases:
-                if case.onset_date > end_date or case.confirm_date < event_date:
-                    print('error')
-                    raise Exception('case date out of range')
-            new_event = form.save()
-            messages.success(request, 'You have add the new event successfully!') 
-            form = EventForm()
+            startDateDelta = form.cleaned_data['date'] - startDate.date()
+            endDateDelta = endDate.date() - form.cleaned_data['date'] 
+            if startDateDelta < timedelta(days=0) or endDateDelta < timedelta(days=0):
+                messages.error(request, str(form.cleaned_data['date']) + " is out off the covid period in Hong Kong." )
+            else:
+                cases = form.cleaned_data['cases']
+                event_date = form.cleaned_data['date']
+                end_date = event_date + timedelta(days=14)
+                for case in cases:
+                    if case.onset_date > end_date or case.confirm_date < event_date:
+                        messages.error(request, "case date out of range")
+                new_event = form.save()
+                messages.success(request, 'You have add the new event successfully!') 
+                form = EventForm()
             # return redirect('test')
         else:
             messages.error(request, 'There are some data miss, please check.')
@@ -84,6 +94,7 @@ def EventFormView(request):
     return render(request, 'event_form.html', {'form': form})
 
 def AddAttendanceView(request, add_type, id_num):
+
 
     if add_type == 'case':
         data_obj = Case.objects.get(pk = id_num)
