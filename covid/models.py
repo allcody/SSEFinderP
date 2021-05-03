@@ -18,7 +18,7 @@ class Event(models.Model):
     y_coordinate = models.DecimalField(max_digits=10, decimal_places=3)
     date = models.DateField(default=date.today)
     description = models.CharField(max_length=200)
-    cases = models.ManyToManyField('Case', through=Attendance)
+    cases = models.ManyToManyField('Case', through=Attendance, blank=True)
 
     def __str__(self):
         return f'{self.venue_name} {self.date}'
@@ -30,7 +30,7 @@ class Case(models.Model):
     birth = models.DateField(default=date.today)
     onset_date = models.DateField(default=date.today)
     confirm_date = models.DateField(default=date.today)
-    events = models.ManyToManyField('Event', through=Attendance)
+    events = models.ManyToManyField('Event', through=Attendance, blank=True)
 
     def __str__(self):
         return self.case_number
@@ -56,7 +56,7 @@ class CaseForm(ModelForm):
 class EventForm(ModelForm):
     class Meta:
         model = Event
-        fields = [ 'venue_name', 'venue_location', 'address', 'x_coordinate', 'y_coordinate', 'date', 'description']
+        fields = [ 'venue_name', 'venue_location', 'address', 'x_coordinate', 'y_coordinate', 'date', 'description', 'cases']
         widgets = {
             'address' : TextInput(attrs={'readonly':True}),
             # 'venue_location' : TextInput(attrs={'readonly':True}),
