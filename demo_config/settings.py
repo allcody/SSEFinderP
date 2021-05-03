@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = ')(oit092hs!^7!rdi0rn*sfo38%y8ndna)2)9ql!uj+nsn7bg_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('CHP_DEBUG', default=True)
 
 ALLOWED_HOSTS = ['comp3297-ssefinder.herokuapp.com','127.0.0.1:8000','localhost']
 
@@ -88,16 +88,21 @@ WSGI_APPLICATION = 'demo_config.wsgi.application'
 #     }
 # }
 
+
 DATABASES = {
-    'default':{
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ssefinder',
-        'USER': 'cody2',
-        'PASSWORD': 'localPassword',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
+    'default': env.dj_db_url('DATABASE_URL')
 }
+
+# DATABASES = {
+#     'default':{
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'ssefinder',
+#         'USER': 'cody2',
+#         'PASSWORD': 'localPassword',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
