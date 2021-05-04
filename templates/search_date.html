@@ -101,7 +101,18 @@
       </p>
       <div class="collapse" id='collapseExample'>
         <div class="card card-body">
-          {{ event.cases }}
+          Possible Infectors <br>
+          {% for infector_case in event.infectors %}
+              {{ infector_case }}
+              {{ infector_case.onset_date }}
+          <br>
+          {% endfor %}
+          Possible Infected <br>
+          {% for infected_case in event.infecteds %}
+              {{ infected_case }}
+              {{ infected_case.onset_date }}
+          <br>
+          {% endfor %}
         </div>
       </div>
     {% endfor %}

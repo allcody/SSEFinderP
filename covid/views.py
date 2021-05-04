@@ -48,11 +48,12 @@ def CaseFormView(request):
                         return render(request, 'case_form.html', {'form': form, 'formset': formset})
 
                 messages.success(request, 'You have add the new case successfully!')         
-                new_case = form.save()
-                new_events = formset.save()
+                new_case = form.save_m2m()
+                new_events = formset.save_m2m()
                 form = CaseForm()
                 for event in new_events:
                     new_case.events.add(event)
+                    event.cases.add(new_case)
             else:
                 messages.error(request, 'Wrong date input.' + str(form.cleaned_data['birth']) )
         else:
@@ -166,6 +167,9 @@ def SearchByDate(request):
         if not endDate:
             endDate = datetime.now().strftime("%Y-%m-%d")
         event_list = Event.objects.all().filter(date__range=[startDate, endDate])
+        for ev in event_list:
+            print(ev.cases.all())
+                
         return render(request, 'search_date.html', { 'event_list': event_list, 'startDate': startDate, 'endDate': endDate })
 
 def SearchByCase(request):

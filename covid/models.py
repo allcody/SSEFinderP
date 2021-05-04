@@ -1,6 +1,6 @@
 from django.db import models
 from django.forms import ModelForm, modelformset_factory, ModelMultipleChoiceField, SelectMultiple, CheckboxSelectMultiple, TextInput, DateInput
-from datetime import date
+from datetime import date, timedelta
 # Create your models here.
 
 class Attendance(models.Model):
@@ -22,6 +22,12 @@ class Event(models.Model):
 
     def __str__(self):
         return f'{self.venue_name} {self.date}'
+
+    @property
+    def infectors(self):
+        return self.cases.filter(onset_date__lte=self.date+timedelta(days=3))
+    def infecteds(self):
+        return self.cases.filter(onset_date__gte=self.date+timedelta(days=2))
 
 class Case(models.Model):
     case_number = models.CharField(max_length=200)
@@ -66,6 +72,10 @@ class EventForm(ModelForm):
             'cases': CheckboxSelectMultiple
         }
 
+class newEventForm(EventForm):
+    def __init__(self, *args, **kwargs):
+        super(newEventForm, self).__init__(*args, **kwargs)
+        self.fields.pop('cases')
 
 class EventToCaseForm(ModelForm):
     class Meta:
