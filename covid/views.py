@@ -139,10 +139,10 @@ class MainView(TemplateView):
     template_name = 'main.html'
 
 class SearchDateView(TemplateView):
-    template_name = 'search_by_date.html'
+    template_name = 'search_date.html'
 
 class SearchCaseView(TemplateView):
-    template_name = 'search_by_case.html'
+    template_name = 'search_case.html'
 
 def LoginAuthentication(request):
     if request.GET.get('username') == 'adminse' and request.GET.get('password') == 'comp3297':
