@@ -151,8 +151,20 @@ def CheckLoggedIn(request):
 class LoginView(TemplateView):
     template_name = 'login.html'
 
-def Main(request):
-    if not CheckLoggedIn(request):
-        return render(request, 'login.html', { 'message': 'Login First!' })
+# def Main(request):
+#     if not CheckLoggedIn(request):
+#         return render(request, 'login.html', { 'message': 'Login First!' })
 
-    return render(request, 'main.html')
+#     return render(request, 'main.html')
+
+class main(TemplateView):
+    template_name = 'main.html'
+    
+    def get_context_data(self, **kwargs):
+        # event = self.kwargs['main']
+        context = super().get_context_data(**kwargs)
+        context ['event_list'] = Event.objects.all()
+        # context['event'] = Event.objects.get(pk = event)
+        print(context)
+        print("eco")
+        return context
