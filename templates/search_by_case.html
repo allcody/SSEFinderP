@@ -56,7 +56,7 @@
       </div>
     </nav>
 
-    <form name="form" action="{% url 'search_case' %}" method="get">
+    <form name="form" action="{% url 'search_by_case' %}" method="get">
       {% if caseNum %}
         <input type="number" name="caseNum" value="{{ caseNum }}">
       {% else %}

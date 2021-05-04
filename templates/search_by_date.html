@@ -56,7 +56,7 @@
       </div>
     </nav>
 
-    <form name="form" action="{% url 'search_date' %}" method="get">
+    <form name="form" action="{% url 'search_by_date' %}" method="get">
       {% if startDate %}
         <input type="date" name="startDate" value="{{ startDate }}">
       {% else %}
