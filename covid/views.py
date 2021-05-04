@@ -89,12 +89,6 @@ def AddAttendanceView(request, add_type, id_num):
 
     return render(request, 'add_attendance_form.html', {'form': form, 'add_type': add_type, 'attendance': data_obj})
 
-class LoginView(TemplateView):
-    template_name = 'login.html'
-
-class MainView(TemplateView):
-    template_name = 'main.html'
-
 def LoginAuthentication(request):
     user = authenticate(username=request.GET.get('username'), password=request.GET.get('password'))
     if user is not None:
