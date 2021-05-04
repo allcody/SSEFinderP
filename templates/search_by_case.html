@@ -24,6 +24,9 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'main' %}">Home</a>
             </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li> -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Search
@@ -31,7 +34,8 @@
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item" href="{% url 'search_by_date' %}">By date</a></li>
                   <li><a class="dropdown-item" href="{% url 'search_by_case' %}">By case</a></li>
-
+                  <!-- <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                 </ul>
               </li>
              
@@ -40,8 +44,10 @@
                   Add
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'case-form' %}">By case</a></li>
-                  <li><a class="dropdown-item" href="{% url 'event-form' %}">By event</a></li>
+                  <li><a class="dropdown-item" href="#">By case</a></li>
+                  <li><a class="dropdown-item" href="#">By event</a></li>
+                  <!-- <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                 </ul>
               </li>
           </ul>
@@ -50,34 +56,42 @@
       </div>
     </nav>
 
-    <h1>All Events</h1>
-    
-    {% for event in event_list %}
+    <form name="form" action="{% url 'search_case' %}" method="get">
+      {% if caseNum %}
+        <input type="number" name="caseNum" value="{{ caseNum }}">
+      {% else %}
+        <input type="number" name="caseNum">
+      {% endif %}
+      
+        <input type="submit" value="Search">
+    </form>
 
+    {% for case in case_list %}
     <table class="table">
       <thead>
         <tr>
           <th scope="col">No.</th>
-          <th scope="col">Venue Name</th>
-          <th scope="col">Venue Location</th>
-          <th scope="col">Venue Address</th>
-          <th scope="col">Coordinate</th>
-          <th scope="col">Date</th>
-          <th scope="col">Description</th>
+          <th scope="col">Case Number</th>
+          <th scope="col">Person Name</th>
+          <th scope="col">ID Number</th>
+          <th scope="col">Date of Birth</th>
+          <th scope="col">Date of Onset</th>
+          <th scope="col">Date Case Confirmed</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <th scope="row">{{ event.id }}</th>
-          <td>{{ event.venue_name }}</td>
-          <td>{{ event.venue_location }}</td>
-          <td>{{ event.address }}</td>
-          <td>{{ event.x_coordinate }}, {{ event.y_coordinate }}</td>
-          <td>{{ event.date }}</td>
-          <td>{{ event.description }}</td>
+          <th scope="row">{{ case.id }}</th>
+          <td>{{ case.case_number }}</td>
+          <td>{{ case.person_name }}</td>
+          <td>{{ case.id_number }}</td>
+          <td>{{ case.birth }}</td>
+          <td>{{ case.onset_date }}</td>
+          <td>{{ case.confirm_date }}</td>
         </tr>
       </tbody>
     </table>
+
     <p>
       <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
         Click For more
@@ -85,10 +99,10 @@
     </p>
     <div class="collapse" id='collapseExample'>
       <div class="card card-body">
-        {{ event.cases.all }}
+        {{ case.events.all }}
       </div>
     </div>
-    {% endfor %}
+    {% endfor %} 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 

@@ -30,7 +30,7 @@ class Event(models.Model):
         return self.cases.filter(onset_date__gte=self.date+timedelta(days=2))
 
 class Case(models.Model):
-    case_number = models.CharField(max_length=200)
+    case_number = models.IntegerField(max_length=200)
     person_name = models.CharField(max_length=200)
     id_number = models.CharField(max_length=200)
     birth = models.DateField(default=date.today)
@@ -40,8 +40,6 @@ class Case(models.Model):
 
     def __str__(self):
         return self.case_number
-
-
 
 class FormDateInput(DateInput):
     input_type = 'date'
@@ -57,7 +55,6 @@ class CaseForm(ModelForm):
             'confirm_date' : FormDateInput(),
             'events' : CheckboxSelectMultiple
         }
-
 
 class EventForm(ModelForm):
     class Meta:
