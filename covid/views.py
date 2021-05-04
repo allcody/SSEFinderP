@@ -4,6 +4,7 @@ from covid.models import *
 from datetime import datetime, date, timedelta
 from django.forms import modelformset_factory, TextInput, CheckboxSelectMultiple
 from django.contrib import messages
+from django.views.generic import TemplateView 
 # Create your views here.
 
 def test(request):
@@ -153,7 +154,7 @@ class search_case(TemplateView):
 
         return 0
 
-    def get_case(request):
+    # def get_case(request):
         
 class search_date(TemplateView):
     template_name = "search_date.html"
