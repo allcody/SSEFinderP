@@ -7,6 +7,9 @@ from django.http import HttpResponse
 from django.template import loader
 from django.urls import reverse
 
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+
 from datetime import datetime
 
 # Create your views here.
@@ -92,19 +95,19 @@ class LoginView(TemplateView):
 class MainView(TemplateView):
     template_name = 'main.html'
 
-class SearchDateView(TemplateView):
-    template_name = 'search_by_date.html'
-
-class SearchCaseView(TemplateView):
-    template_name = 'search_by_case.html'
-
 def LoginAuthentication(request):
-    if request.GET.get('username') == 'adminse' and request.GET.get('password') == 'comp3297':
+    user = authenticate(username=request.GET.get('username'), password=request.GET.get('password'))
+    if user is not None:
+        request.session['id'] = user.username
+        request.session.set_expiry(10)
         return redirect('main')
     else:
         return render(request, 'login.html', { 'message': 'Login Failure!' })
 
 def SearchByDate(request):
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
+
     if not Event.objects.exists():
         return render(request, 'search_by_date.html')
     elif not request.GET.get('startDate') and not request.GET.get('endDate'):
@@ -131,6 +134,9 @@ def SearchByDate(request):
             return render(request, 'search_by_date.html', { 'event_list': event_list, 'startDate': startDate, 'endDate': endDate })
 
 def SearchByCase(request):
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
+
     if not Case.objects.exists():
         return render(request, 'search_by_case.html')
     elif not request.GET.get('caseNum'):
@@ -140,3 +146,10 @@ def SearchByCase(request):
         caseNum = request.GET.get('caseNum')
         case_list = Case.objects.all().filter(case_number=caseNum)
         return render(request, 'search_by_case.html', {'case_list': case_list, 'caseNum': caseNum})
+
+def CheckLoggedIn(request):
+    try:
+        if User.objects.get(username=request.session.get('id')) is not None:
+            return True
+    except:
+        return False
