@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'main' %}">Home</a>
             </li>
             <!-- <li class="nav-item">
               <a class="nav-link" href="#">Link</a>
@@ -32,8 +32,8 @@
                   Search
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">By date</a></li>
-                  <li><a class="dropdown-item" href="#">By case</a></li>
+                  <li><a class="dropdown-item" href="{% url 'search_date' %}">By date</a></li>
+                  <li><a class="dropdown-item" href="{% url 'search_case' %}">By case</a></li>
                   <!-- <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                 </ul>
@@ -76,7 +76,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
+          <th scope="col">No.</th>
           <th scope="col">Venue Name</th>
           <th scope="col">Venue Location</th>
           <th scope="col">Venue Address</th>
