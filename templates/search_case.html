@@ -24,18 +24,14 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'main' %}">Home</a>
             </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li> -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Search
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'search_date' %}">By date</a></li>
-                  <li><a class="dropdown-item" href="{% url 'search_case' %}">By case</a></li>
-                  <!-- <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                  <li><a class="dropdown-item" href="#">By date</a></li>
+                  <li><a class="dropdown-item" href="#">By case</a></li>
+
                 </ul>
               </li>
              
@@ -46,6 +42,7 @@
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item" href="#">By case</a></li>
                   <li><a class="dropdown-item" href="#">By event</a></li>
+
                 </ul>
               </li>
           </ul>
@@ -54,12 +51,19 @@
       </div>
     </nav>
 
-    {% for event in event_list %}
 
+    <H1>Search by Case Number</H1>
+    <div class="input-group">
+        <input type="search" class="form-control rounded" placeholder="Enter Case Number" aria-label="Search"
+          aria-describedby="search-addon" />
+        <button type="button" class="btn btn-outline-primary">search</button>
+      </div>
+      
+    <!-- {% for event in event_list %}
+ 
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">No.</th>
           <th scope="col">Venue Name</th>
           <th scope="col">Venue Location</th>
           <th scope="col">Venue Address</th>
@@ -70,7 +74,7 @@
       </thead>
       <tbody>
         <tr>
-          <th scope="row">{{ event.id }}</th>
+          <th scope="row">{{i}}</th>
           <td>{{ event.venue_name }}</td>
           <td>{{ event.venue_location }}</td>
           <td>{{ event.address }}</td>
@@ -80,17 +84,7 @@
         </tr>
       </tbody>
     </table>
-    <p>
-      <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-        Click For more
-      </a>
-    </p>
-    <div class="collapse" id='collapseExample'>
-      <div class="card card-body">
-        {{ event.cases }}
-      </div>
-    </div>
-    {% endfor %}
+    {% endfor %} -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 

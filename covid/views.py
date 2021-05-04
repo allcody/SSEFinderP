@@ -130,3 +130,33 @@ def AddAttendanceView(request, add_type, id_num):
             form.fields['cases'] = ModelMultipleChoiceField(queryset=valid_cases,widget=CheckboxSelectMultiple)
 
     return render(request, 'add_attendance_form.html', {'form': form, 'add_type': add_type, 'attendance': data_obj})
+
+class main(TemplateView):
+    template_name = 'main.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context ['event_list'] = Event.objects.all()
+        # print(context)
+        # print("eco")
+        return context
+
+class viewEvent(TemplateView):
+    template_name = 'main.html'
+
+class search_case(TemplateView):
+    template_name = "search_case.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context ['case_list'] = Case.objects.all()
+
+        return 0
+
+    def get_case(request):
+        
+class search_date(TemplateView):
+    template_name = "search_date.html"
+
+    # def get_context_data(self, **kwargs):
+    #     return 0
