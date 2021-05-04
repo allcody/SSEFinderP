@@ -112,7 +112,9 @@
     <button type="button" class="btn btn-primary">Add Case</button>
 
     <script>
-      
+      var btn = document.getElementsByClassName('btn btn-primary')
+      btn.id = event.id
+      btn.href = "addAttendance/" + "case" + event.id
     </script>
     {% endfor %}
 
