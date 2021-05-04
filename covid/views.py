@@ -4,6 +4,7 @@ from covid.models import *
 from datetime import datetime, date, timedelta
 from django.forms import modelformset_factory, TextInput, CheckboxSelectMultiple
 from django.contrib import messages
+from django.views.generic import TemplateView 
 # Create your views here.
 
 def test(request):
@@ -130,3 +131,50 @@ def AddAttendanceView(request, add_type, id_num):
             form.fields['cases'] = ModelMultipleChoiceField(queryset=valid_cases,widget=CheckboxSelectMultiple)
 
     return render(request, 'add_attendance_form.html', {'form': form, 'add_type': add_type, 'attendance': data_obj})
+
+class LoginView(TemplateView):
+    template_name = 'login.html'
+
+class MainView(TemplateView):
+    template_name = 'main.html'
+
+class SearchDateView(TemplateView):
+    template_name = 'search_by_date.html'
+
+class SearchCaseView(TemplateView):
+    template_name = 'search_by_case.html'
+
+def LoginAuthentication(request):
+    if request.GET.get('username') == 'adminse' and request.GET.get('password') == 'comp3297':
+        return redirect('main')
+    else:
+        return render(request, 'login.html', { 'message': 'Login Failure!' })
+
+def SearchByDate(request):
+    if not Event.objects.exists():
+        return render(request, 'search_by_date.html')
+    elif not request.GET.get('startDate') and not request.GET.get('endDate'):
+        startDate = request.GET.get('startDate')
+        endDate = request.GET.get('endDate')
+        event_list = Event.objects.all()
+        return render(request, 'search_by_date.html', { 'event_list': event_list,  'startDate': startDate, 'endDate': endDate })
+    else:
+        startDate = request.GET.get('startDate')
+        endDate = request.GET.get('endDate')
+        if not startDate and Event.objects.exists():
+            startDate = Event.objects.order_by('date')[0]
+        if not endDate:
+            endDate = datetime.now().strftime("%Y-%m-%d")
+        event_list = Event.objects.all().filter(date__range=[startDate, endDate])
+        return render(request, 'search_by_date.html', { 'event_list': event_list, 'startDate': startDate, 'endDate': endDate })
+
+def SearchByCase(request):
+    if not Case.objects.exists():
+        return render(request, 'search_by_case.html')
+    elif not request.GET.get('caseNum'):
+        case_list = Case.objects.all()
+        return render(request, 'search_by_case.html', {'case_list': case_list})
+    else:
+        caseNum = request.GET.get('caseNum')
+        case_list = Case.objects.all().filter(case_number=caseNum)
+        return render(request, 'search_by_case.html', {'case_list': case_list})
