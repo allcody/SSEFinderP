@@ -39,7 +39,7 @@ class Case(models.Model):
     events = models.ManyToManyField('Event', through=Attendance, blank=True)
 
     def __str__(self):
-        return self.case_number
+        return str(self.case_number)
 
 class FormDateInput(DateInput):
     input_type = 'date'

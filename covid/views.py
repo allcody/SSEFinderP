@@ -120,7 +120,7 @@ def LoginAuthentication(request):
     user = authenticate(username=request.GET.get('username'), password=request.GET.get('password'))
     if user is not None:
         request.session['id'] = user.username
-        request.session.set_expiry(10)
+        request.session.set_expiry(3600)
         return redirect('main')
     else:
         return render(request, 'login.html', { 'message': 'Login Failure!' })
