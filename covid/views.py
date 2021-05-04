@@ -151,5 +151,8 @@ def CheckLoggedIn(request):
 class LoginView(TemplateView):
     template_name = 'login.html'
 
-class MainView(TemplateView):
-    template_name = 'main.html'
+def Main(request):
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
+
+    return render(request, 'main.html')
