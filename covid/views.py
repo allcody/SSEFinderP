@@ -147,3 +147,9 @@ def CheckLoggedIn(request):
             return True
     except:
         return False
+
+class LoginView(TemplateView):
+    template_name = 'login.html'
+
+class MainView(TemplateView):
+    template_name = 'main.html'
