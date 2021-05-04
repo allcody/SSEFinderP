@@ -24,7 +24,7 @@ class Event(models.Model):
         return f'{self.venue_name} {self.date}'
 
 class Case(models.Model):
-    case_number = models.CharField(max_length=200)
+    case_number = models.IntegerField(max_length=200)
     person_name = models.CharField(max_length=200)
     id_number = models.CharField(max_length=200)
     birth = models.DateField(default=date.today)
@@ -34,8 +34,6 @@ class Case(models.Model):
 
     def __str__(self):
         return self.case_number
-
-
 
 class FormDateInput(DateInput):
     input_type = 'date'
@@ -51,7 +49,6 @@ class CaseForm(ModelForm):
             'confirm_date' : FormDateInput(),
             'events' : CheckboxSelectMultiple
         }
-
 
 class EventForm(ModelForm):
     class Meta:
