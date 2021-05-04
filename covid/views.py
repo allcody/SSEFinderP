@@ -152,12 +152,12 @@ def LoginAuthentication(request):
 
 def SearchByDate(request):
     if not Event.objects.exists():
-        return render(request, 'search_by_date.html')
+        return render(request, 'search_date.html')
     elif not request.GET.get('startDate') and not request.GET.get('endDate'):
         startDate = request.GET.get('startDate')
         endDate = request.GET.get('endDate')
         event_list = Event.objects.all()
-        return render(request, 'search_by_date.html', { 'event_list': event_list,  'startDate': startDate, 'endDate': endDate })
+        return render(request, 'search_date.html', { 'event_list': event_list,  'startDate': startDate, 'endDate': endDate })
     else:
         startDate = request.GET.get('startDate')
         endDate = request.GET.get('endDate')
@@ -166,15 +166,15 @@ def SearchByDate(request):
         if not endDate:
             endDate = datetime.now().strftime("%Y-%m-%d")
         event_list = Event.objects.all().filter(date__range=[startDate, endDate])
-        return render(request, 'search_by_date.html', { 'event_list': event_list, 'startDate': startDate, 'endDate': endDate })
+        return render(request, 'search_date.html', { 'event_list': event_list, 'startDate': startDate, 'endDate': endDate })
 
 def SearchByCase(request):
     if not Case.objects.exists():
-        return render(request, 'search_by_case.html')
+        return render(request, 'search_case.html')
     elif not request.GET.get('caseNum'):
         case_list = Case.objects.all()
-        return render(request, 'search_by_case.html', {'case_list': case_list})
+        return render(request, 'search_case.html', {'case_list': case_list})
     else:
         caseNum = request.GET.get('caseNum')
         case_list = Case.objects.all().filter(case_number=caseNum)
-        return render(request, 'search_by_case.html', {'case_list': case_list})
+        return render(request, 'search_case.html', {'case_list': case_list})
