@@ -1,0 +1,36 @@
+body {
+    background-color: #00d0b8;
+    margin: 0px;
+}
+
+ul {
+    background-color: white;
+}
+
+li {
+    float: right;
+    display: block;
+}
+
+.topnav {
+    background-color: white;
+    list-style-type: none;
+    font-size: 40px;
+    margin: 0px;
+    padding: 0px 0px 0px 60px;
+}
+
+.topnav a {
+    font-size: 20px;
+    padding: 0px 20px 0px 20px;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+.active {
+    background-color: #ddd;
+    color: black;
+}
