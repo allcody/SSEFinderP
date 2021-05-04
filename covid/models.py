@@ -27,7 +27,9 @@ class Event(models.Model):
     def infectors(self):
         return self.cases.filter(onset_date__lte=self.date+timedelta(days=3))
     def infecteds(self):
-        return self.cases.filter(onset_date__gte=self.date+timedelta(days=2))
+        return self.cases.filter(onset_date__gte=self.date+timedelta(days=2)).filter(onset_date__lte=self.date+timedelta(days=14))
+    def is_SSE(self):
+        return self.infecteds.count > 6
 
 class Case(models.Model):
     case_number = models.IntegerField(max_length=200)
