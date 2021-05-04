@@ -147,3 +147,23 @@ def CheckLoggedIn(request):
             return True
     except:
         return False
+
+class LoginView(TemplateView):
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
+    template_name = 'login.html'
+
+class MainView(TemplateView):
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
+    template_name = 'main.html'
+
+class SearchDateView(TemplateView):
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
+    template_name = 'search_date.html'
+
+class SearchCaseView(TemplateView):
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
+    template_name = 'search_case.html'
