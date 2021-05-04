@@ -132,32 +132,49 @@ def AddAttendanceView(request, add_type, id_num):
 
     return render(request, 'add_attendance_form.html', {'form': form, 'add_type': add_type, 'attendance': data_obj})
 
-class main(TemplateView):
-    template_name = 'main.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context ['event_list'] = Event.objects.all()
-        # print(context)
-        # print("eco")
-        return context
+class LoginView(TemplateView):
+    template_name = 'login.html'
 
-class viewEvent(TemplateView):
+class MainView(TemplateView):
     template_name = 'main.html'
 
-class search_case(TemplateView):
-    template_name = "search_case.html"
+class SearchDateView(TemplateView):
+    template_name = 'search_by_date.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context ['case_list'] = Case.objects.all()
+class SearchCaseView(TemplateView):
+    template_name = 'search_by_case.html'
 
-        return 0
+def LoginAuthentication(request):
+    if request.GET.get('username') == 'adminse' and request.GET.get('password') == 'comp3297':
+        return redirect('main')
+    else:
+        return render(request, 'login.html', { 'message': 'Login Failure!' })
 
-    # def get_case(request):
-        
-class search_date(TemplateView):
-    template_name = "search_date.html"
+def SearchByDate(request):
+    if not Event.objects.exists():
+        return render(request, 'search_by_date.html')
+    elif not request.GET.get('startDate') and not request.GET.get('endDate'):
+        startDate = request.GET.get('startDate')
+        endDate = request.GET.get('endDate')
+        event_list = Event.objects.all()
+        return render(request, 'search_by_date.html', { 'event_list': event_list,  'startDate': startDate, 'endDate': endDate })
+    else:
+        startDate = request.GET.get('startDate')
+        endDate = request.GET.get('endDate')
+        if not startDate and Event.objects.exists():
+            startDate = Event.objects.order_by('date')[0]
+        if not endDate:
+            endDate = datetime.now().strftime("%Y-%m-%d")
+        event_list = Event.objects.all().filter(date__range=[startDate, endDate])
+        return render(request, 'search_by_date.html', { 'event_list': event_list, 'startDate': startDate, 'endDate': endDate })
 
-    # def get_context_data(self, **kwargs):
-    #     return 0
+def SearchByCase(request):
+    if not Case.objects.exists():
+        return render(request, 'search_by_case.html')
+    elif not request.GET.get('caseNum'):
+        case_list = Case.objects.all()
+        return render(request, 'search_by_case.html', {'case_list': case_list})
+    else:
+        caseNum = request.GET.get('caseNum')
+        case_list = Case.objects.all().filter(case_number=caseNum)
+        return render(request, 'search_by_case.html', {'case_list': case_list})
