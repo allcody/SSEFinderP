@@ -74,6 +74,7 @@ class newEventForm(EventForm):
         super(newEventForm, self).__init__(*args, **kwargs)
         self.fields.pop('cases')
 
+        
 class EventToCaseForm(ModelForm):
     class Meta:
         model = Case
