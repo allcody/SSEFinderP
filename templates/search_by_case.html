@@ -57,8 +57,13 @@
     </nav>
 
     <form name="form" action="{% url 'search_case' %}" method="get">
-      <input type="number" name="caseNum">
-      <input type="submit" value="Search">
+      {% if caseNum %}
+        <input type="number" name="caseNum" value="{{ caseNum }}">
+      {% else %}
+        <input type="number" name="caseNum">
+      {% endif %}
+      
+        <input type="submit" value="Search">
     </form>
 
     {% for case in case_list %}
