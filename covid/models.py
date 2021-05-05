@@ -1,7 +1,21 @@
 from django.db import models
 from django.forms import ModelForm, modelformset_factory, ModelMultipleChoiceField, SelectMultiple, CheckboxSelectMultiple, TextInput, DateInput
+from django.contrib.auth.models import User
 from datetime import date, timedelta
 # Create your models here.
+
+# class CHP_User(AbstractUser):
+#     chp_staff_number = models.CharField(max_length=200)
+
+#     def __str__(self):
+#         return self.chp_staff_number
+
+class CHP_User(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    chp_staff_number = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.chp_staff_number
 
 class Attendance(models.Model):
     case = models.ForeignKey('Case', on_delete=models.CASCADE)
@@ -32,7 +46,7 @@ class Event(models.Model):
         return self.infecteds.count > 6
 
 class Case(models.Model):
-    case_number = models.IntegerField(max_length=200)
+    case_number = models.IntegerField()
     person_name = models.CharField(max_length=200)
     id_number = models.CharField(max_length=200)
     birth = models.DateField(default=date.today)
