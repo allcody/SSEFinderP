@@ -133,7 +133,7 @@ def SearchByDate(request):
     elif not request.GET.get('startDate') and not request.GET.get('endDate'):
         startDate = request.GET.get('startDate')
         endDate = request.GET.get('endDate')
-        event_list = Event.objects.all()
+        event_list = Event.objects.all().filter(is_SSE=True)
         return render(request, 'search_by_date.html', { 'event_list': event_list,  'startDate': startDate, 'endDate': endDate })
     else:
         startDate = request.GET.get('startDate')
@@ -144,7 +144,7 @@ def SearchByDate(request):
         if not endDate:
             endDate = datetime.now().strftime("%Y-%m-%d")
         
-        event_list = Event.objects.all().filter(date__range=[startDate, endDate])
+        event_list = Event.objects.all().filter(is_SSE=True).filter(date__range=[startDate, endDate])
 
         if not request.GET.get('endDate'):
             return render(request, 'search_by_date.html', { 'event_list': event_list, 'startDate': startDate})
