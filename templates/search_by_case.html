@@ -45,13 +45,23 @@
     </p>
     <div class="collapse" id='collapseExample'>
       <div class="card card-body">
-        {{ case.events.all }}
+        <h3>Attended Events</h3> <br>
+        {% for attended_event in case.events.all %}
+          
+        <li>Venue Name: <a href="{% url 'search_by_date' %}?startDate={{ attended_event.date }}&endDate={{ attended_event.date }}" >{{ attended_event.venue_name }}</a></li>
+        <li>Venue Location: {{ attended_event.venue_location }}</li>
+        <li>Date: {{ attended_event.date }}</li>
+        <li>Description: {{ attended_event.description }}</li>
+        <br>
+        {% empty %}
+          No Event Attended
+        {% endfor %}
       </div>
     </div>
 
     <!-- <button type="button" class="btn btn-primary" id={{case.id}}>Add Event</button> -->
     <p>
-      <a class="btn btn-primary" href='"addAttendance/"+"event"+case.case_number'>Add Event</a>
+      <a class="btn btn-primary" href="{% url 'add-addentance' "event" case.pk %}">Add Event</a>
     </p>
     
     <!-- <script>
@@ -60,7 +70,7 @@
       btn.href = "addAttendance/" + "event" + case.case_number
     </script> -->
     {% endfor %} 
-    
+
     {% if not case_list %}
     <div>There is no case found!</div>
     {% endif %}

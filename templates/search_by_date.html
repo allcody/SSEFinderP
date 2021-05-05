@@ -51,24 +51,32 @@
     </p>
     <div class="collapse" id='collapseExample'>
       <div class="card card-body">
-          Possible Infectors <br>
+          <h3>Possible Infectors</h3> 
+          <br>
           {% for infector_case in event.infectors %}
-              {{ infector_case }}
-              {{ infector_case.onset_date }}
+          
+              <li>Case Number: <a href="{% url 'search_by_case'%}?caseNum=infector_case.pk ">{{ infector_case }} </a> </li>
+              <li>Onset Date: {{ infector_case.onset_date }}</li>
           <br>
+          {% empty %}
+            No Cases Yet
           {% endfor %}
-          Possible Infected <br>
-          {% for infected_case in event.infecteds %}
-              {{ infected_case }}
-              {{ infected_case.onset_date }}
+
+          <h3>Possible Infected</h3>
           <br>
+          {% for infected_case in event.infecteds %}
+              <li> Case Number: <a href="{% url 'search_by_case'%}?caseNum=infected_case.pk ">{{ infected_case }}</a></li>
+              <li> Onset Date: {{ infected_case.onset_date }}</li>
+          <br>
+          {% empty %}
+            No Cases Yet
           {% endfor %}
       </div>
     </div>
 
     <!-- <button type="button" class="btn btn-primary">Add Case</button> -->
     <p>
-      <a class="btn btn-primary" href='"addAttendance/"+"case"+event.id'>Add Event</a>
+      <a class="btn btn-primary" href="{% url 'add-addentance' "case" event.pk %}">Add Attendees</a>
     </p>
     
     <!-- <script>
@@ -77,7 +85,7 @@
       btn.href = "addAttendance/" + "case" + event.id
     </script> -->
     {% endfor %}
-    
+
     {% if not event_list %}
     <div>There is no event found!</div>
     {% endif %}
