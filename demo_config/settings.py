@@ -31,7 +31,7 @@ SECRET_KEY = ')(oit092hs!^7!rdi0rn*sfo38%y8ndna)2)9ql!uj+nsn7bg_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['comp3297-ssefinder.herokuapp.com','127.0.0.1:8000','localhost']
+ALLOWED_HOSTS = ['comp3297-ssefinder.herokuapp.com','127.0.0.1','localhost']
 
 
 # Application definition
@@ -48,13 +48,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'demo_config.urls'
@@ -81,23 +81,23 @@ WSGI_APPLICATION = 'demo_config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
-    'default':{
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ssefinder',
-        'USER': 'cody2',
-        'PASSWORD': 'localPassword',
-        'HOST': 'localhost',
-        'PORT': '',
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default':{
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'ssefinder',
+#         'USER': 'cody2',
+#         'PASSWORD': 'localPassword',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -138,6 +138,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',

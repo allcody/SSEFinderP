@@ -14,6 +14,9 @@ from datetime import datetime
 
 # Create your views here.
 
+# Expiration time in seconds
+SESSION_EXPIRE_TIME = 60
+
 def test(request):
     return HttpResponse("Hello world")
 
@@ -93,9 +96,11 @@ def LoginAuthentication(request):
     user = authenticate(username=request.GET.get('username'), password=request.GET.get('password'))
     if user is not None:
         request.session['id'] = user.username
-        request.session.set_expiry(10)
+        request.session.set_expiry(SESSION_EXPIRE_TIME)
         return redirect('main')
     else:
+        if request.session.get('id'):
+            del request.session['id']
         return render(request, 'login.html', { 'message': 'Login Failure!' })
 
 def SearchByDate(request):
@@ -144,6 +149,7 @@ def SearchByCase(request):
 def CheckLoggedIn(request):
     try:
         if User.objects.get(username=request.session.get('id')) is not None:
+            request.session.set_expiry(SESSION_EXPIRE_TIME)
             return True
     except:
         return False
@@ -151,20 +157,22 @@ def CheckLoggedIn(request):
 class LoginView(TemplateView):
     template_name = 'login.html'
 
-# def Main(request):
-#     if not CheckLoggedIn(request):
-#         return render(request, 'login.html', { 'message': 'Login First!' })
+def Main(request):
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
 
-#     return render(request, 'main.html')
+    context = {}
+    context['event_list'] = Event.objects.all()
+    return render(request, 'main.html', context)
 
-class main(TemplateView):
-    template_name = 'main.html'
+# class main(TemplateView):
+#     template_name = 'main.html'
     
-    def get_context_data(self, **kwargs):
-        # event = self.kwargs['main']
-        context = super().get_context_data(**kwargs)
-        context ['event_list'] = Event.objects.all()
-        # context['event'] = Event.objects.get(pk = event)
-        print(context)
-        print("eco")
-        return context
+#     def get_context_data(self, **kwargs):
+#         # event = self.kwargs['main']
+#         context = super().get_context_data(**kwargs)
+#         context ['event_list'] = Event.objects.all()
+#         # context['event'] = Event.objects.get(pk = event)
+#         print(context)
+#         print("eco")
+#         return context
