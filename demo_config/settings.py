@@ -34,7 +34,7 @@ SECRET_KEY = env('CHP_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('CHP_DEBUG', default=True)
 
-ALLOWED_HOSTS = ['comp3297-ssefinder.herokuapp.com','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['comp3297-ssefinder.herokuapp.com','127.0.0.1','localhost','comp3297-ssefinder-sprint2.herokuapp.com']
 
 
 # Application definition
