@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from .models import *
 from django.contrib import messages
 from django.views.generic import TemplateView, ListView
-from django.http import HttpResponse
 from django.template import loader
 from django.urls import reverse
 
@@ -18,19 +17,50 @@ def test(request):
     return HttpResponse("Hello world")
 
 def CaseFormView(request):
-    eventFormSet = modelformset_factory(Event, form = EventForm, extra=1)
+
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
+
+    eventFormSet = modelformset_factory(Event, form = newEventForm, extra=1)
 
     if request.method == 'POST':
         form = CaseForm(request.POST)
         formset = eventFormSet(request.POST, request.FILES)
         if form.is_valid() and formset.is_valid():
-            messages.success(request, 'You have add the new case successfully!') 
-            new_case = form.save()
-            new_events = formset.save()
-            form = CaseForm()
-            for event in new_events:
-                new_case.events.add(event)
-            # return redirect('test')
+            birth_date = form.cleaned_data['birth']
+            onset_date = form.cleaned_data['onset_date']
+            confirm_date = form.cleaned_data['confirm_date']
+            deltaBO = onset_date - birth_date
+            deltaCO = confirm_date - onset_date
+
+            if (deltaBO > timedelta(days=0) and deltaCO > timedelta(days=0))  :
+                for attended_event in form.cleaned_data['events']:
+                    end_date = attended_event.date + timedelta(days=14)
+                    
+                    if onset_date > end_date or attended_event.date >confirm_date:
+                        messages.error(request, "case date out of range")
+                        return render(request, 'case_form.html', {'form': form, 'formset': formset})
+
+
+                for new_event_form in formset:
+                    if len(new_event_form.cleaned_data) == 0:
+                        break
+                    event_date = new_event_form.cleaned_data['date']
+                    end_date = event_date + timedelta(days=14)
+
+                    if onset_date > end_date or event_date > confirm_date:
+                        messages.error(request, "case date out of range")
+                        return render(request, 'case_form.html', {'form': form, 'formset': formset})
+
+                messages.success(request, 'You have add the new case successfully!')         
+                new_case = form.save()
+                new_events = formset.save()
+                form = CaseForm()
+                for event in new_events:
+                    new_case.events.add(event)
+                    event.cases.add(new_case)
+            else:
+                messages.error(request, 'Wrong date input.' + str(form.cleaned_data['birth']) )
         else:
             messages.error(request, 'There are some data miss, please check.')
     else:
@@ -40,6 +70,9 @@ def CaseFormView(request):
     return render(request, 'case_form.html', {'form': form, 'formset': formset})
 
 def EventFormView(request):
+    
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
 
     if request.method == 'POST':
         form = EventForm(request.POST)
@@ -58,6 +91,9 @@ def EventFormView(request):
 
 def AddAttendanceView(request, add_type, id_num):
 
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
+
     if add_type == 'case':
         data_obj = Case.objects.get(pk = id_num)
     elif add_type == 'event':
@@ -71,20 +107,22 @@ def AddAttendanceView(request, add_type, id_num):
         
         if form.is_valid():
             new_attendance = form.save()
-            return redirect('test')
+            return redirect('main')
 
     else:
         if add_type == 'case':
             form = EventToCaseForm(instance=data_obj)
-            start_date = data_obj.onset_date - timedelta(days=4)
-            end_date = data_obj.onset_date + timedelta(days=15)
-            valid_events = Event.objects.filter(date__gt=start_date).filter(date__lt=end_date)
+            # start_date = data_obj.onset_date - timedelta(days=4)
+            start_date = data_obj.onset_date - timedelta(days=14)
+            end_date = data_obj.confirm_date
+            valid_events = Event.objects.filter(date__gte=start_date).filter(date__lte=end_date)
             form.fields['events'] = ModelMultipleChoiceField(queryset=valid_events,widget=CheckboxSelectMultiple)
         elif add_type == 'event':
             form = CaseToEventForm(instance=data_obj) 
-            start_date = data_obj.date + timedelta(days=4)
-            end_date = data_obj.date - timedelta(days=15)
-            valid_cases = Case.objects.filter(onset_date__gt=end_date).filter(onset_date__lt=start_date)
+            # start_date = data_obj.date + timedelta(days=4)
+            event_date = data_obj.date
+            end_date = event_date + timedelta(days=14)
+            valid_cases = Case.objects.filter(confirm_date__gte=event_date).filter(onset_date__lte=end_date)
             form.fields['cases'] = ModelMultipleChoiceField(queryset=valid_cases,widget=CheckboxSelectMultiple)
 
     return render(request, 'add_attendance_form.html', {'form': form, 'add_type': add_type, 'attendance': data_obj})
@@ -93,7 +131,7 @@ def LoginAuthentication(request):
     user = authenticate(username=request.GET.get('username'), password=request.GET.get('password'))
     if user is not None:
         request.session['id'] = user.username
-        request.session.set_expiry(10)
+        request.session.set_expiry(3600)
         return redirect('main')
     else:
         return render(request, 'login.html', { 'message': 'Login Failure!' })
@@ -108,6 +146,7 @@ def SearchByDate(request):
         startDate = request.GET.get('startDate')
         endDate = request.GET.get('endDate')
         event_list = Event.objects.all()
+        event_list = [ev for ev in event_list if ev.is_SSE()]
         return render(request, 'search_by_date.html', { 'event_list': event_list,  'startDate': startDate, 'endDate': endDate })
     else:
         startDate = request.GET.get('startDate')
@@ -119,7 +158,7 @@ def SearchByDate(request):
             endDate = datetime.now().strftime("%Y-%m-%d")
         
         event_list = Event.objects.all().filter(date__range=[startDate, endDate])
-
+        event_list = [ev for ev in event_list if ev.is_SSE()]
         if not request.GET.get('endDate'):
             return render(request, 'search_by_date.html', { 'event_list': event_list, 'startDate': startDate})
         elif not request.GET.get('startDate'):
@@ -149,22 +188,23 @@ def CheckLoggedIn(request):
         return False
 
 class LoginView(TemplateView):
-    if not CheckLoggedIn(request):
-        return render(request, 'login.html', { 'message': 'Login First!' })
     template_name = 'login.html'
 
-# def Main(request):
-#     if not CheckLoggedIn(request):
-#         return render(request, 'login.html', { 'message': 'Login First!' })
+def Main(request):
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
 
-#     return render(request, 'main.html')
+    context = {}
+    context['event_list'] = Event.objects.all()
 
-class main(TemplateView):
-    template_name = 'main.html'
+    return render(request, 'main.html', context)
+
+# class main(TemplateView):
+#     template_name = 'main.html'
     
-    def get_context_data(self, **kwargs):
-        # event = self.kwargs['main']
-        context = super().get_context_data(**kwargs)
-        context ['event_list'] = Event.objects.all()
-        # context['event'] = Event.objects.get(pk = event)
-        return context
+#     def get_context_data(self, **kwargs):
+#         # event = self.kwargs['main']
+#         context = super().get_context_data(**kwargs)
+#         context ['event_list'] = Event.objects.all()
+#         # context['event'] = Event.objects.get(pk = event)
+#         return context
