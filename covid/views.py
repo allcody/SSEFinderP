@@ -17,7 +17,7 @@ def test(request):
     return HttpResponse("Hello world")
 
 def CaseFormView(request):
-    
+
     if not CheckLoggedIn(request):
         return render(request, 'login.html', { 'message': 'Login First!' })
 
@@ -91,8 +91,8 @@ def EventFormView(request):
 
 def AddAttendanceView(request, add_type, id_num):
 
-        if not CheckLoggedIn(request):
-    return render(request, 'login.html', { 'message': 'Login First!' })
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
 
     if add_type == 'case':
         data_obj = Case.objects.get(pk = id_num)
