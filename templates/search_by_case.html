@@ -32,8 +32,8 @@
           <td>{{ case.person_name }}</td>
           <td>{{ case.id_number }}</td>
           <td>{{ case.birth }}</td>
-          <td>{{ case.onset_date }}</td>
-          <td>{{ case.confirm_date }}</td>
+          <td>{{ case.onset_date|date:"Y-m-d" }}</td>
+          <td>{{ case.confirm_date|date:"Y-m-d" }}</td>
         </tr>
       </tbody>
     </table>
@@ -48,7 +48,7 @@
         <h3>Attended Events</h3> <br>
         {% for attended_event in case.events.all %}
           
-        <li>Venue Name: <a href="{% url 'search_by_date' %}?startDate={{ attended_event.date }}&endDate={{ attended_event.date|date:"Y-m-d"}}" >{{ attended_event.venue_name }}</a></li>
+        <li>Venue Name: <a href="{% url 'search_by_date' %}?startDate={{ attended_event.date|date:"Y-m-d" }}&endDate={{ attended_event.date|date:"Y-m-d"}}" >{{ attended_event.venue_name }}</a></li>
         <li>Venue Location: {{ attended_event.venue_location }}</li>
         <li>Date: {{ attended_event.date|date:"Y-m-d"}}</li>
         <li>Description: {{ attended_event.description }}</li>
