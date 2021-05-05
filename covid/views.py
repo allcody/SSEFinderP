@@ -50,8 +50,8 @@ def CaseFormView(request):
                         return render(request, 'case_form.html', {'form': form, 'formset': formset})
 
                 messages.success(request, 'You have add the new case successfully!')         
-                new_case = form.save_m2m()
-                new_events = formset.save_m2m()
+                new_case = form.save()
+                new_events = formset.save()
                 form = CaseForm()
                 for event in new_events:
                     new_case.events.add(event)
