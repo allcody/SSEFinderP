@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
+    <!-- Add additional CSS in static file -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
     
     <head>
         {% csrf_token %}
