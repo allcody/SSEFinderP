@@ -30,7 +30,7 @@ class Event(models.Model):
     address = models.CharField(max_length=200)
     x_coordinate = models.DecimalField(max_digits=10, decimal_places=3)
     y_coordinate = models.DecimalField(max_digits=10, decimal_places=3)
-    date = models.DateField(default=date.today)
+    date = models.DateField(default=date.today, input_formats=settings.DATE_INPUT_FORMATS)
     description = models.CharField(max_length=200)
     cases = models.ManyToManyField('Case', through=Attendance, blank=True)
 
