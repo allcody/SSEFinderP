@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <form name="form" action="{% url 'search_by_case' %}" method="get">
+      {% if caseNum %}
+        <input type="number" name="caseNum" value="{{ caseNum }}">
+      {% else %}
+        <input type="number" name="caseNum">
+      {% endif %}
+      
+        <input type="submit" value="Search">
+    </form>
+
+    {% for case in case_list %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">No.</th>
+          <th scope="col">Case Number</th>
+          <th scope="col">Person Name</th>
+          <th scope="col">ID Number</th>
+          <th scope="col">Date of Birth</th>
+          <th scope="col">Date of Onset</th>
+          <th scope="col">Date Case Confirmed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">{{ case.id }}</th>
+          <td>{{ case.case_number }}</td>
+          <td>{{ case.person_name }}</td>
+          <td>{{ case.id_number }}</td>
+          <td>{{ case.birth }}</td>
+          <td>{{ case.onset_date }}</td>
+          <td>{{ case.confirm_date }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Click For more
+      </a>
+    </p>
+    <div class="collapse" id='collapseExample'>
+      <div class="card card-body">
+        {{ case.events.all }}
+      </div>
+    </div>
+
+    <!-- <button type="button" class="btn btn-primary" id={{case.id}}>Add Event</button> -->
+    <a class="btn btn-primary" href='"addAttendance/"+"event"+case.case_number'>Add Event</button>
+    <!-- <script>
+      var btn = document.getElementsByClassName('btn btn-primary')
+      btn.id = case.id
+      btn.href = "addAttendance/" + "event" + case.case_number
+    </script> -->
+    {% endfor %} 
+  {% endblock %}

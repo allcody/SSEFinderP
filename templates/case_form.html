@@ -33,13 +33,7 @@
             <input type="submit" value="Submit" class="btn btn-success">
         </div>
     </form>
-
-</br>
-    <form action="javascript:history.back()">
-        <div class="d-grid gap-2 col-6 mx-auto" id="id_button-container">
-            <input type="submit" value="Cancel" class="btn btn-danger" />
-        </div>
-    </form>
+    </br>
 
 {% endblock %}
 
@@ -66,33 +60,39 @@
             container.insertBefore(newForm, buttonContain)
 
             totalForms.setAttribute('value', `${formNum+1}`)
-
             var formIndex = $("div.event-form:eq("+formNum+")")
             formIndex.find($("input[name$=venue_location]")).on('change', function() {
                 console.log('Changed');
                 var value =  formIndex.find($("input[name$=venue_location]")).val()
                 console.log(value)
-                $.ajax({
-                    url: "https://geodata.gov.hk/gs/api/v1.0.0/locationSearch",
-                    type: "get", //send it through get method
-                    data: { 
-                        "q": value
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        //Do Something
-                        console.log(response)
-                        $.each(response, function(index, element) {
-                            formIndex.find($("input[name$=address]")).val(element.addressEN)
-                            formIndex.find($("input[name$=x_coordinate]")).val(element.x)
-                            formIndex.find($("input[name$=y_coordinate]")).val(element.y)
-                        });
-                    },
-                    error: function(xhr) {
-                        //Do Something to handle error
-                        console.log("Error")
-                    }
-                });
+                if (value != "") {
+                    $.ajax({
+                        url: "https://geodata.gov.hk/gs/api/v1.0.0/locationSearch",
+                        type: "get", //send it through get method
+                        data: { 
+                            "q": value
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            //Do Something
+                            console.log(response)
+                            $.each(response, function(index, element) {
+                                formIndex.find($("input[name$=address]")).val(element.addressEN)
+                                formIndex.find($("input[name$=x_coordinate]")).val(element.x)
+                                formIndex.find($("input[name$=y_coordinate]")).val(element.y)
+                            });
+                        },
+                        error: function(xhr) {
+                            //Do Something to handle error
+                            console.log("Error")
+                        }
+                    });
+                } else {
+                    formIndex.find($("input[name$=address]")).val("")
+                    formIndex.find($("input[name$=x_coordinate]")).val("")
+                    formIndex.find($("input[name$=y_coordinate]")).val("")
+                }
+                    
             });
         }
     </script>
@@ -104,27 +104,34 @@
                 console.log('Changed');
                 var value =  formIndex.find($("input[name$=venue_location]")).val()
                 console.log(value)
-                $.ajax({
-                    url: "https://geodata.gov.hk/gs/api/v1.0.0/locationSearch",
-                    type: "get", //send it through get method
-                    data: { 
-                        "q": value
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        //Do Something
-                        console.log(response)
-                        $.each(response, function(index, element) {
-                            formIndex.find($("input[name$=address]")).val(element.addressEN)
-                            formIndex.find($("input[name$=x_coordinate]")).val(element.x)
-                            formIndex.find($("input[name$=y_coordinate]")).val(element.y)
-                        });
-                    },
-                    error: function(xhr) {
-                        //Do Something to handle error
-                        console.log("Error")
-                    }
-                });
+                if (value != "") {
+                    $.ajax({
+                        url: "https://geodata.gov.hk/gs/api/v1.0.0/locationSearch",
+                        type: "get", //send it through get method
+                        data: { 
+                            "q": value
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            //Do Something
+                            console.log(response)
+                            $.each(response, function(index, element) {
+                                formIndex.find($("input[name$=address]")).val(element.addressEN)
+                                formIndex.find($("input[name$=x_coordinate]")).val(element.x)
+                                formIndex.find($("input[name$=y_coordinate]")).val(element.y)
+                            });
+                        },
+                        error: function(xhr) {
+                            //Do Something to handle error
+                            console.log("Error")
+                        }
+                    });
+                } else {
+                    formIndex.find($("input[name$=address]")).val("")
+                    formIndex.find($("input[name$=x_coordinate]")).val("")
+                    formIndex.find($("input[name$=y_coordinate]")).val("")
+                }
+               
             });
         
         })

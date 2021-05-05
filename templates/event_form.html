@@ -23,12 +23,6 @@
         </div>
     </form>
     </br>
-
-    <form action="javascript:history.back()">
-        <div class="d-grid gap-2 col-6 mx-auto" id="id_button-container">
-            <input type="submit" value="Cancel" class="btn btn-danger" />
-        </div>
-    </form>
 {% endblock %}
 
 
@@ -40,27 +34,33 @@
             $('body').on('change', "input[name=venue_location]", function() {
                 console.log('Changed');
                 var value = $("input[name=venue_location]").val()
-                $.ajax({
-                    url: "https://geodata.gov.hk/gs/api/v1.0.0/locationSearch",
-                    type: "get", //send it through get method
-                    data: { 
-                        "q": value
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        //Do Something
-                        console.log(response)
-                        $.each(response, function(index, element) {
-                                $("input[name=address]").val(element.addressEN)
-                                $("input[name=x_coordinate]").val(element.x)
-                                $("input[name=y_coordinate]").val(element.y)
-                        });
-                    },
-                    error: function(xhr) {
-                        //Do Something to handle error
-                        console.log("Error")
-                    }
-                });
+                if (value != "") {
+                    $.ajax({
+                        url: "https://geodata.gov.hk/gs/api/v1.0.0/locationSearch",
+                        type: "get", //send it through get method
+                        data: { 
+                            "q": value
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            //Do Something
+                            console.log(response)
+                            $.each(response, function(index, element) {
+                                    $("input[name=address]").val(element.addressEN)
+                                    $("input[name=x_coordinate]").val(element.x)
+                                    $("input[name=y_coordinate]").val(element.y)
+                            });
+                        },
+                        error: function(xhr) {
+                            //Do Something to handle error
+                            console.log("Error")
+                        }
+                    });
+                } else {
+                    $("input[name=address]").val("")
+                    $("input[name=x_coordinate]").val("")
+                    $("input[name=y_coordinate]").val("")
+                }
             });
         })
     </script>

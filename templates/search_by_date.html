@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <form name="form" action="{% url 'search_by_date' %}" method="get">
+      {% if startDate %}
+        <input type="date" name="startDate" value="{{ startDate }}">
+      {% else %}
+        <input type="date" name="startDate">
+      {% endif %}
+
+      {% if endDate %}
+        <input type="date" name="endDate" value="{{ endDate }}">
+      {% else %}
+        <input type="date" name="endDate">
+      {% endif %}
+
+      <input type="submit" value="Search">
+    </form>
+
+    {% for event in event_list %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">No.</th>
+          <th scope="col">Venue Name</th>
+          <th scope="col">Venue Location</th>
+          <th scope="col">Venue Address</th>
+          <th scope="col">Coordinate</th>
+          <th scope="col">Date</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">{{ event.id }}</th>
+          <td>{{ event.venue_name }}</td>
+          <td>{{ event.venue_location }}</td>
+          <td>{{ event.address }}</td>
+          <td>{{ event.x_coordinate }}, {{ event.y_coordinate }}</td>
+          <td>{{ event.date }}</td>
+          <td>{{ event.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Click For more
+      </a>
+    </p>
+    <div class="collapse" id='collapseExample'>
+      <div class="card card-body">
+        {{ event.cases.all }}
+      </div>
+    </div>
+
+    <!-- <button type="button" class="btn btn-primary">Add Case</button> -->
+    <a class="btn btn-primary" href='"addAttendance/"+"case"+event.id'>Add Event</button>
+    <!-- <script>
+      var btn = document.getElementsByClassName('btn btn-primary')
+      btn.id = event.id
+      btn.href = "addAttendance/" + "case" + event.id
+    </script> -->
+    {% endfor %}
+{% endblock %}
