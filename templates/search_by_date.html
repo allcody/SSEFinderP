@@ -55,7 +55,7 @@
           <br>
           {% for infector_case in event.infectors %}
           
-              <li>Case Number: <a href="{% url 'search_by_case'%}?caseNum=infector_case.pk ">{{ infector_case }} </a> </li>
+              <li>Case Number: <a href="{% url 'search_by_case'%}?caseNum={{ infector_case.pk }} ">{{ infector_case }} </a> </li>
               <li>Onset Date: {{ infector_case.onset_date }}</li>
           <br>
           {% empty %}
@@ -65,7 +65,7 @@
           <h3>Possible Infected</h3>
           <br>
           {% for infected_case in event.infecteds %}
-              <li> Case Number: <a href="{% url 'search_by_case'%}?caseNum=infected_case.pk ">{{ infected_case }}</a></li>
+              <li> Case Number: <a href="{% url 'search_by_case'%}?caseNum={{ infected_case.pk }} ">{{ infected_case }}</a></li>
               <li> Onset Date: {{ infected_case.onset_date }}</li>
           <br>
           {% empty %}
