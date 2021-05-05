@@ -103,8 +103,8 @@ def AddAttendanceView(request, add_type, id_num):
         if add_type == 'case':
             form = EventToCaseForm(instance=data_obj)
             # start_date = data_obj.onset_date - timedelta(days=4)
-            # end_date = data_obj.onset_date + timedelta(days=15)
-            start_date = data_obj.confirm_date
+            start_date = data_obj.onset_date - timedelta(days=14)
+            end_date = data_obj.confirm_date
             valid_events = Event.objects.filter(date__gte=start_date).filter(date__lte=end_date)
             form.fields['events'] = ModelMultipleChoiceField(queryset=valid_events,widget=CheckboxSelectMultiple)
         elif add_type == 'event':
