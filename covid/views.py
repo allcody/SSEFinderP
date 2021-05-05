@@ -97,7 +97,7 @@ def AddAttendanceView(request, add_type, id_num):
         
         if form.is_valid():
             new_attendance = form.save()
-            return redirect('test')
+            return redirect('main')
 
     else:
         if add_type == 'case':
