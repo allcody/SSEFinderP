@@ -17,6 +17,10 @@ def test(request):
     return HttpResponse("Hello world")
 
 def CaseFormView(request):
+    
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
+
     eventFormSet = modelformset_factory(Event, form = newEventForm, extra=1)
 
     if request.method == 'POST':
@@ -66,6 +70,9 @@ def CaseFormView(request):
     return render(request, 'case_form.html', {'form': form, 'formset': formset})
 
 def EventFormView(request):
+    
+    if not CheckLoggedIn(request):
+        return render(request, 'login.html', { 'message': 'Login First!' })
 
     if request.method == 'POST':
         form = EventForm(request.POST)
@@ -83,6 +90,9 @@ def EventFormView(request):
     return render(request, 'event_form.html', {'form': form})
 
 def AddAttendanceView(request, add_type, id_num):
+
+        if not CheckLoggedIn(request):
+    return render(request, 'login.html', { 'message': 'Login First!' })
 
     if add_type == 'case':
         data_obj = Case.objects.get(pk = id_num)
