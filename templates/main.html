@@ -59,6 +59,10 @@
         {% endfor %}
     </div>
   </div>
+
+  <p>
+    <a class="btn btn-primary" href="{% url 'add-attendance' "event" event.pk %}">Add Attendees</a>
+  </p>
   
   {% endfor %}
 {% endblock %}
