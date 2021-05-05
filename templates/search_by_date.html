@@ -51,12 +51,25 @@
     </p>
     <div class="collapse" id='collapseExample'>
       <div class="card card-body">
-        {{ event.cases.all }}
+          Possible Infectors <br>
+          {% for infector_case in event.infectors %}
+              {{ infector_case }}
+              {{ infector_case.onset_date }}
+          <br>
+          {% endfor %}
+          Possible Infected <br>
+          {% for infected_case in event.infecteds %}
+              {{ infected_case }}
+              {{ infected_case.onset_date }}
+          <br>
       </div>
     </div>
 
     <!-- <button type="button" class="btn btn-primary">Add Case</button> -->
-    <a class="btn btn-primary" href='"addAttendance/"+"case"+event.id'>Add Event</button>
+    <p>
+      <a class="btn btn-primary" href='"addAttendance/"+"case"+event.id'>Add Event</a>
+    </p>
+    
     <!-- <script>
       var btn = document.getElementsByClassName('btn btn-primary')
       btn.id = event.id
