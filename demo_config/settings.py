@@ -14,6 +14,9 @@ from pathlib import Path
 from django.contrib.messages import constants as messages
 from environs import Env
 import os
+import mimetypes
+
+mimetypes.add_type("text/css", ".css", True)
 
 env = Env()
 env.read_env()
