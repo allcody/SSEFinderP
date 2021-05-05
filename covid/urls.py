@@ -1,10 +1,11 @@
 from django.urls import path 
+from django.contrib.auth.decorators import login_required
 from . import views
 
 urlpatterns = [
     path('', views.LoginView.as_view(), name='login'),
     path('fetchLoginData', views.LoginAuthentication, name='fetch_login_data'),
-    path('covid', views.main.as_view(), name='main'),
+    path('covid', login_required(views.main.as_view()), name='main'),
     path('searchCase', views.SearchByCase, name='search_by_case'),
     path('searchDate', views.SearchByDate, name='search_by_date'),
 
