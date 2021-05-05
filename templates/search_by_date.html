@@ -72,6 +72,10 @@
       <input type="submit" value="Search">
     </form>
 
+    {% if not event_list %}
+    <div>There is no event found!</div>
+    {% endif %}
+
     {% for event in event_list %}
     <table class="table">
       <thead>
