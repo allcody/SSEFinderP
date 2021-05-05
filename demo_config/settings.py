@@ -152,4 +152,3 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-DATE_INPUT_FORMATS = ['%Y-%m-%d']
