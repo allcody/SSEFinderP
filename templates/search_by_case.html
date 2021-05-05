@@ -31,7 +31,7 @@
           <td>{{ case.case_number }}</td>
           <td>{{ case.person_name }}</td>
           <td>{{ case.id_number }}</td>
-          <td>{{ case.birth }}</td>
+          <td>{{ case.birth|date:"Y-m-d" }}</td>
           <td>{{ case.onset_date|date:"Y-m-d" }}</td>
           <td>{{ case.confirm_date|date:"Y-m-d" }}</td>
         </tr>
