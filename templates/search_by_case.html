@@ -60,4 +60,8 @@
       btn.href = "addAttendance/" + "event" + case.case_number
     </script> -->
     {% endfor %} 
+    
+    {% if not case_list %}
+    <div>There is no case found!</div>
+    {% endif %}
   {% endblock %}

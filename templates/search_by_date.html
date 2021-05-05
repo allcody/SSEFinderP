@@ -77,4 +77,8 @@
       btn.href = "addAttendance/" + "case" + event.id
     </script> -->
     {% endfor %}
+    
+    {% if not event_list %}
+    <div>There is no event found!</div>
+    {% endif %}
 {% endblock %}

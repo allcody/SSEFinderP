@@ -17,7 +17,7 @@ def test(request):
     return HttpResponse("Hello world")
 
 def CaseFormView(request):
-    eventFormSet = modelformset_factory(Event, form = EventForm, extra=1)
+    eventFormSet = modelformset_factory(Event, form = newEventForm, extra=1)
 
     if request.method == 'POST':
         form = CaseForm(request.POST)
@@ -42,7 +42,6 @@ def CaseFormView(request):
                     if len(new_event_form.cleaned_data) == 0:
                         break
                     event_date = new_event_form.cleaned_data['date']
-                    # start_date = event_date - timedelta(days=3)
                     end_date = event_date + timedelta(days=14)
 
                     if onset_date > end_date or event_date > confirm_date:
