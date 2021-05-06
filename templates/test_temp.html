@@ -1,7 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
 <h1>Showing All Cases</h1>
 
 {% for case in case_list.all %}
-    <li> No. {{ case.case_number }}</li>
+    <li> Case No. {{ case.case_number }}</li>
     <li> Person Name {{ case.person_name }}</li>
     <li> ID Number {{ case.id_number }}</li>
     <li> Date of Birth {{ case.birth }}</li>
@@ -9,15 +11,16 @@
     <li> Date Case Confirmed {{ case.confirm_date }}</li>
     <li> Events Attended </li>
     {% for at_ev in case.events.all %}
-        {{ at_ev }
+        {{ at_ev }}
     {% empty %}
         No Event Attended
     {% endfor %}
-
+    <br>
 {% empty %}
 No Case in DB
 {% endfor %}
 
+<br>
 <h1>Showing All Events</h1>
 
 {% for event in event_list.all %}
@@ -33,7 +36,8 @@ No Case in DB
     {% empty %}
         No Attendee
     {% endfor %}
-    
+    <br>
 {% empty %}
 No Event in DB
 {% endfor %}
+{% endblock %}
