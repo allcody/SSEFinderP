@@ -7,7 +7,8 @@ from django.contrib import messages
 # Create your views here.
 
 def test(request):
-    return HttpResponse("Hello world")
+    
+    return render(request, 'case_form.html', {'case_list': Case.objects.all(), 'event_': Event.objects.all()})
 
 def CaseFormView(request):
     eventFormSet = modelformset_factory(Event, form = newEventForm, extra=1)
