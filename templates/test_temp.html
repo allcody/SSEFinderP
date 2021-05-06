@@ -15,7 +15,8 @@
     {% empty %}
         No Event Attended
     {% endfor %}
-    <br>
+    <a href="{% url 'add-attendance' "case" case.pk %}">Add Event</a>
+    <br><br>
 {% empty %}
 No Case in DB
 {% endfor %}
@@ -32,11 +33,12 @@ No Case in DB
     <li>Description {{ event.description }}</li>
     <li> Attendees </li>
     {% for at_ca in event.cases.all %}
-        {{ at_ca }
+        {{ at_ca }?
     {% empty %}
         No Attendee
     {% endfor %}
-    <br>
+    <a href="{% url 'add-attendance' "event" event.pk %}">Add Attendees</a>
+    <br><br>
 {% empty %}
 No Event in DB
 {% endfor %}
