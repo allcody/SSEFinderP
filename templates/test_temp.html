@@ -11,7 +11,7 @@
     <li> Date Case Confirmed {{ case.confirm_date }}</li>
     <li> Events Attended </li>
     {% for at_ev in case.events.all %}
-        {{ at_ev }}
+        {{ at_ev }} <br>
     {% empty %}
         No Event Attended
     {% endfor %}
@@ -34,7 +34,7 @@ No Case in DB
     <li>Description {{ event.description }}</li>
     <li> Attendees </li>
     {% for at_ca in event.cases.all %}
-        {{ at_ca }}
+        {{ at_ca }} <br>
     {% empty %}
         No Attendee
     {% endfor %}
