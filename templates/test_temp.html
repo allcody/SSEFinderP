@@ -15,6 +15,7 @@
     {% empty %}
         No Event Attended
     {% endfor %}
+    <br>
     <a href="{% url 'add-attendance' "case" case.pk %}">Add Event</a>
     <br><br>
 {% empty %}
@@ -37,6 +38,7 @@ No Case in DB
     {% empty %}
         No Attendee
     {% endfor %}
+    <br>
     <a href="{% url 'add-attendance' "event" event.pk %}">Add Attendees</a>
     <br><br>
 {% empty %}
