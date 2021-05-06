@@ -33,7 +33,7 @@ No Case in DB
     <li>Description {{ event.description }}</li>
     <li> Attendees </li>
     {% for at_ca in event.cases.all %}
-        {{ at_ca }?
+        {{ at_ca }}
     {% empty %}
         No Attendee
     {% endfor %}
