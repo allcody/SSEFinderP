@@ -1,1 +1,39 @@
+<h1>Showing All Cases</h1>
 
+{% for case in case_list.all %}
+    <li> No. {{ case.case_number }}</li>
+    <li> Person Name {{ case.person_name }}</li>
+    <li> ID Number {{ case.id_number }}</li>
+    <li> Date of Birth {{ case.birth }}</li>
+    <li> Date of Onset {{ case.onset_date }}</li>
+    <li> Date Case Confirmed {{ case.confirm_date }}</li>
+    <li> Events Attended </li>
+    {% for at_ev in case.events.all %}
+        {{ at_ev }
+    {% empty %}
+        No Event Attended
+    {% endfor %}
+
+{% empty %}
+No Case in DB
+{% endfor %}
+
+<h1>Showing All Events</h1>
+
+{% for event in event_list.all %}
+    <li>Venue Name {{ event.venue_name }}</li>
+    <li>Venue Location {{ event.venue_location }}</li>
+    <li>Address {{ event.address }}</li>
+    <li>X/Y Coordinate{{ event.x_coordinate }}, {{ event.y_coordinate }}</li>
+    <li>Date {{ event.date }}</li>
+    <li>Description {{ event.description }}</li>
+    <li> Attendees </li>
+    {% for at_ca in event.cases.all %}
+        {{ at_ca }
+    {% empty %}
+        No Attendee
+    {% endfor %}
+    
+{% empty %}
+No Event in DB
+{% endfor %}
